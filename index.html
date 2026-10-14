@@ -1,47 +1,201 @@
-
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>JARVIS AI | AYAN</title>
-  <style>
-    body {
-      margin: 0;
-      min-height: 100vh;
-      display: grid;
-      place-items: center;
-      background: #070b16;
-      color: #00e5ff;
-      font-family: Arial, sans-serif;
-      text-align: center;
-    }
-    .box {
-      padding: 35px;
-      border: 1px solid #00e5ff;
-      border-radius: 20px;
-      box-shadow: 0 0 25px #00e5ff33;
-    }
-    h1 { font-size: 42px; }
-    p { color: #cbd5e1; }
-    button {
-      padding: 12px 24px;
-      background: #00e5ff;
-      border: 0;
-      border-radius: 8px;
-      cursor: pointer;
-      font-weight: bold;
-    }
-  </style>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JARVIS • Web Assistant</title>
+<style>
+:root{--bg:#07111d;--panel:#0d1b2a;--line:#173a50;--cyan:#43d9ff;--text:#e8f7ff;--muted:#91adbd;--green:#4ef0b2;--red:#ff7185}
+*{box-sizing:border-box}body{margin:0;background:radial-gradient(ellipse at top,#102d43,var(--bg) 60%);color:var(--text);font:16px/1.45 system-ui,Segoe UI,Arial,sans-serif;min-height:100vh}
+button,input{font:inherit}button{cursor:pointer;border:1px solid #24627c;background:#102b3d;color:var(--text);padding:11px 15px;border-radius:12px}button:hover{border-color:var(--cyan);box-shadow:0 0 15px #43d9ff25}button.primary{background:linear-gradient(135deg,#087eaa,#145a8a);border-color:#43d9ff}button:disabled{opacity:.45;cursor:not-allowed}
+.wrap{max-width:1100px;margin:auto;padding:22px}.top{display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}.brand{display:flex;align-items:center;gap:12px}.orb{width:46px;height:46px;border:2px solid var(--cyan);border-radius:50%;box-shadow:0 0 25px #43d9ff70,inset 0 0 18px #43d9ff35;display:grid;place-items:center;color:var(--cyan);font-weight:800}.muted{color:var(--muted)}.panel{background:#0a1927eF;border:1px solid var(--line);border-radius:20px;padding:20px;box-shadow:0 18px 50px #0004}.login{max-width:460px;margin:10vh auto}.field{display:flex;flex-direction:column;gap:7px;margin:14px 0}.field input{width:100%;background:#06121e;color:var(--text);border:1px solid #28506a;border-radius:12px;padding:13px;outline:none}.field input:focus{border-color:var(--cyan)}.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}.grid{display:grid;grid-template-columns:minmax(0,1.45fr) minmax(260px,.8fr);gap:18px;margin-top:20px}.status{color:var(--green);font-size:13px;letter-spacing:.08em}.screen{min-height:260px;white-space:pre-wrap;background:#04101a;border:1px solid #17364a;border-radius:16px;padding:18px;overflow:auto}.inputrow{display:flex;gap:8px;margin-top:12px}.inputrow input{flex:1;min-width:0;background:#06121e;color:var(--text);border:1px solid #28506a;border-radius:12px;padding:13px}.quick{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.quick button{font-size:14px;padding:8px 10px}.hide{display:none!important}.list{display:grid;gap:10px}.tile{padding:13px;border:1px solid #173a50;border-radius:14px;background:#091724}.footer{margin:20px 0;color:var(--muted);font-size:13px;text-align:center}.danger{color:var(--red)}.adminbox{margin-top:18px}.small{font-size:13px}.pill{border:1px solid #23556c;border-radius:999px;padding:5px 10px;color:var(--cyan);font-size:12px}
+@media(max-width:760px){.grid{grid-template-columns:1fr}.wrap{padding:14px}.panel{padding:16px}.login{margin:7vh auto}}
+</style>
 </head>
 <body>
-  <div class="box">
-    <h1>J.A.R.V.I.S</h1>
-    <p>Created by AYAN</p>
-    <p>Your personal AI assistant</p>
-    <button onclick="alert('JARVIS website is online!')">
-      Initialize JARVIS
-    </button>
-  </div>
+<div class="wrap">
+  <section id="loginView" class="panel login">
+    <div class="brand"><div class="orb">J</div><div><h1 style="margin:0">J.A.R.V.I.S.</h1><div class="muted">Web Assistant • Public Access</div></div></div>
+    <p class="muted">Enter a display name to start. No GitHub account or email required.</p>
+    <form id="loginForm">
+      <label class="field">Your name<input id="userName" maxlength="40" required autocomplete="nickname" placeholder="Enter your name"></label>
+      <button class="primary" type="submit" style="width:100%">Start JARVIS</button>
+    </form>
+    <p class="small muted">Owner? Open the Admin panel after entering the website.</p>
+  </section>
+
+  <main id="appView" class="hide">
+    <header class="top">
+      <div class="brand"><div class="orb">J</div><div><h1 style="margin:0">J.A.R.V.I.S.</h1><div class="muted">Personal Web Assistant</div></div></div>
+      <div class="row"><span class="pill" id="whoPill">FREE ACCESS</span><button id="adminToggle">Admin</button><button id="logoutBtn">Log out</button></div>
+    </header>
+    <div class="grid">
+      <section class="panel">
+        <div class="row" style="justify-content:space-between"><div><div class="status">● SYSTEM ONLINE</div><h2 style="margin:6px 0 2px">Hello, <span id="helloName">there</span></h2><div class="muted">Ask a question or give a command.</div></div><div class="orb" style="width:66px;height:66px">AI</div></div>
+        <div id="screen" class="screen" aria-live="polite" style="margin-top:18px">JARVIS: Systems ready. Type a command or press Voice.</div>
+        <div class="inputrow"><input id="commandInput" placeholder="e.g. open YouTube, what time is it..." autocomplete="off"><button class="primary" id="sendBtn">Send</button></div>
+        <div class="quick">
+          <button data-cmd="What time is it?">Time</button><button data-cmd="Tell me a joke">Joke</button><button data-cmd="Open YouTube">YouTube</button><button data-cmd="Open Google">Google</button><button data-cmd="Help">Help</button><button id="voiceBtn">🎙 Voice</button>
+        </div>
+        <div class="small muted" id="voiceStatus" style="margin-top:9px">Voice input requires a supported browser and microphone permission.</div>
+      </section>
+      <aside class="panel">
+        <h3 style="margin-top:0">Web tools</h3>
+        <div class="list">
+          <div class="tile"><b>Search the web</b><p class="muted small">Open Google results from a command.</p><button data-cmd="Search Google for latest technology">Search Google</button></div>
+          <div class="tile"><b>YouTube</b><p class="muted small">Open YouTube or search for a song/video.</p><button data-cmd="Play relaxing music on YouTube">Find video</button></div>
+          <div class="tile"><b>WhatsApp</b><p class="muted small">Open a chat link; you confirm and send it in WhatsApp.</p><button id="waBtn">Create WhatsApp message</button></div>
+          <div class="tile"><b>Owner settings</b><p class="muted small">Admin tools are protected by a password prompt.</p><button id="adminToggle2">Open Admin</button></div>
+        </div>
+      </aside>
+    </div>
+    <section id="adminPanel" class="panel adminbox hide">
+      <div class="row" style="justify-content:space-between"><h2 style="margin:0">Owner / Admin</h2><button id="closeAdmin">Close</button></div>
+      <p class="muted small">This static GitHub Pages starter can protect the panel UI only; it cannot securely authenticate an owner or manage users globally without a backend.</p>
+      <div id="adminLogin">
+        <label class="field">Admin password<input type="password" id="adminPassword" placeholder="Enter admin password" autocomplete="current-password"></label>
+        <button class="primary" id="adminLoginBtn">Unlock admin panel</button>
+        <div id="adminMsg" class="small muted" style="margin-top:8px"></div>
+      </div>
+      <div id="adminTools" class="hide">
+        <div class="row"><span class="pill">OWNER MODE (this browser only)</span><button id="exportLog">Export local usage log</button><button id="clearLog" class="danger">Clear local log</button></div>
+        <p class="muted small">Because this version runs only in the browser, its log is local to this browser and is not a central list of everyone using the site.</p>
+        <div id="usageLog" class="list"></div>
+      </div>
+    </section>
+    <div class="footer">Browser-only JARVIS starter • No email signup • Free access without time limits</div>
+  </main>
+</div>
+<script>
+(() => {
+  const $ = id => document.getElementById(id);
+  const log = [];
+  let currentName = "";
+  let isAdmin = false;
+  const append = (speaker, text) => {
+    const box = $("screen");
+    const existing = box.textContent === "JARVIS: Systems ready. Type a command or press Voice." ? "" : box.textContent + "\n\n";
+    box.textContent = existing + speaker + ": " + text;
+    box.scrollTop = box.scrollHeight;
+    log.push({time:new Date().toISOString(),name:currentName,speaker,text});
+  };
+  const say = text => {
+    append("JARVIS", text);
+    if ("speechSynthesis" in window) {
+      window.speechSynthesis.cancel();
+      const utter = new SpeechSynthesisUtterance(text);
+      utter.rate = 1;
+      window.speechSynthesis.speak(utter);
+    }
+  };
+  const open = url => window.open(url, "_blank", "noopener,noreferrer");
+  const search = q => open("https://www.google.com/search?q=" + encodeURIComponent(q));
+  const youtube = q => open("https://www.youtube.com/results?search_query=" + encodeURIComponent(q || "popular music"));
+  function respond(raw) {
+    const c = raw.trim();
+    if (!c) return;
+    append(currentName || "You", c);
+    const s = c.toLowerCase();
+    if (/\b(help|what can you do)\b/.test(s)) {
+      say("I can tell the time and date, tell jokes, open Google and YouTube, search the web, prepare WhatsApp links, and answer a few basic questions. More advanced original desktop features need a separate app or online services.");
+    } else if (/\b(who are you|your name)\b/.test(s)) {
+      say("I am JARVIS, your web assistant.");
+    } else if (/\b(who made you|who created you|who is your creator)\b/.test(s)) {
+      say("AYAN created me.");
+    } else if (/\btime\b/.test(s)) {
+      say("The time is " + new Date().toLocaleTimeString([], {hour:"numeric",minute:"2-digit"}) + ".");
+    } else if (/\b(date|today|day)\b/.test(s)) {
+      say("Today is " + new Date().toLocaleDateString(undefined, {weekday:"long",year:"numeric",month:"long",day:"numeric"}) + ".");
+    } else if (/\bjoke\b/.test(s)) {
+      const jokes = ["Why do programmers prefer dark mode? Because light attracts bugs.","Why did the computer go to the doctor? It had a virus.","I would tell you a UDP joke, but you might not get it."];
+      say(jokes[Math.floor(Math.random()*jokes.length)]);
+    } else if (/\b(open|launch|go to)\b/.test(s) && /\byoutube\b/.test(s)) {
+      say("Opening YouTube."); open("https://www.youtube.com");
+    } else if (/\b(play|search|find)\b/.test(s) && /\byoutube\b/.test(s)) {
+      const q = c.replace(/.*?\b(?:play|search|find)\b/i,"").replace(/\bon youtube\b/i,"").trim();
+      say("Opening YouTube results for " + (q || "popular videos") + "."); youtube(q);
+    } else if (/\b(open|launch|go to)\b/.test(s) && /\bgoogle\b/.test(s)) {
+      say("Opening Google."); open("https://www.google.com");
+    } else if (/\b(search|google)\b/.test(s)) {
+      const q = c.replace(/^(please\s+)?(search|google)\s*(for)?\s*/i,"").trim() || c;
+      say("Searching Google for " + q + "."); search(q);
+    } else if (/\b(open|launch|go to)\b/.test(s) && /\b(github|gmail|instagram|facebook|whatsapp|chatgpt|netflix)\b/.test(s)) {
+      const sites = {github:"https://github.com",gmail:"https://mail.google.com",instagram:"https://instagram.com",facebook:"https://facebook.com",whatsapp:"https://web.whatsapp.com",chatgpt:"https://chatgpt.com",netflix:"https://netflix.com"};
+      const key = Object.keys(sites).find(k => s.includes(k));
+      say("Opening " + key + "."); open(sites[key]);
+    } else if (/\b(hello|hi|hey)\b/.test(s)) {
+      say("Hello " + currentName + ". How can I help?");
+    } else if (/\b(whatsapp|message)\b/.test(s)) {
+      say("I can open a WhatsApp chat link. Use the Create WhatsApp message button to enter a phone number and message.");
+    } else {
+      say("I do not have a built-in answer for that yet. Opening Google search results.");
+      search(c);
+    }
+  }
+  $("loginForm").addEventListener("submit", e => {
+    e.preventDefault();
+    currentName = $("userName").value.trim().replace(/\s+/g," ").slice(0,40);
+    if (!currentName) return;
+    $("loginView").classList.add("hide");
+    $("appView").classList.remove("hide");
+    $("helloName").textContent = currentName;
+    $("whoPill").textContent = "FREE • UNLIMITED";
+    append("JARVIS","Welcome, " + currentName + ". Free access is unlimited in this browser demo.");
+    say("Hello " + currentName + ". JARVIS is ready.");
+  });
+  $("sendBtn").addEventListener("click", () => { const v=$("commandInput").value; $("commandInput").value=""; respond(v); });
+  $("commandInput").addEventListener("keydown", e => { if(e.key==="Enter") $("sendBtn").click(); });
+  document.querySelectorAll("[data-cmd]").forEach(b => b.addEventListener("click", () => respond(b.dataset.cmd)));
+  $("logoutBtn").addEventListener("click", () => { currentName=""; isAdmin=false; $("appView").classList.add("hide"); $("loginView").classList.remove("hide"); $("userName").value=""; $("adminPanel").classList.add("hide"); $("adminTools").classList.add("hide"); $("adminLogin").classList.remove("hide"); });
+  function toggleAdmin() {
+    $("adminPanel").classList.toggle("hide");
+    if (!$("adminPanel").classList.contains("hide")) $("adminPassword").focus();
+  }
+  $("adminToggle").addEventListener("click",toggleAdmin); $("adminToggle2").addEventListener("click",toggleAdmin); $("closeAdmin").addEventListener("click",()=> $("adminPanel").classList.add("hide"));
+  $("adminLoginBtn").addEventListener("click", () => {
+    // NOTE: client-side passwords are visible to anyone inspecting this static file.
+    // Replace with server-side auth before using this panel for real administration.
+    if ($("adminPassword").value === "ayan@100200") {
+      isAdmin=true; $("adminLogin").classList.add("hide"); $("adminTools").classList.remove("hide"); $("adminMsg").textContent=""; renderLog();
+    } else $("adminMsg").textContent="Incorrect password.";
+  });
+  function renderLog() {
+    const box=$("usageLog"); box.innerHTML="";
+    if (!log.length) { box.textContent="No usage entries in this page session."; return; }
+    log.slice().reverse().forEach(item => {
+      const d=document.createElement("div"); d.className="tile";
+      const b=document.createElement("b"); b.textContent=item.name+" · "+item.speaker;
+      const p=document.createElement("p"); p.className="small muted"; p.textContent=new Date(item.time).toLocaleString()+" — "+item.text;
+      d.append(b,p); box.appendChild(d);
+    });
+  }
+  $("exportLog").addEventListener("click",()=> {
+    if(!isAdmin)return;
+    const blob=new Blob([JSON.stringify(log,null,2)],{type:"application/json"});
+    const a=document.createElement("a"); a.href=URL.createObjectURL(blob); a.download="jarvis-local-usage.json"; a.click(); URL.revokeObjectURL(a.href);
+  });
+  $("clearLog").addEventListener("click",()=> { if(isAdmin && confirm("Clear this page session's local log?")) {log.length=0;renderLog();} });
+  $("waBtn").addEventListener("click",()=>{
+    const phone=prompt("Enter phone number with country code (example: 923001234567):");
+    if(!phone)return;
+    const msg=prompt("Enter your WhatsApp message:");
+    if(msg===null)return;
+    const digits=phone.replace(/\D/g,"");
+    if(digits.length<7){alert("Please enter a valid phone number.");return;}
+    say("Opening WhatsApp with your message ready. Review it and press Send.");
+    open("https://wa.me/"+digits+"?text="+encodeURIComponent(msg));
+  });
+  $("voiceBtn").addEventListener("click",()=>{
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){$("voiceStatus").textContent="Voice recognition is not supported by this browser. Try a current version of Chrome or Edge.";return;}
+    const rec=new SR(); rec.lang="en-US"; rec.interimResults=false; rec.maxAlternatives=1;
+    $("voiceStatus").textContent="Listening… allow microphone permission if prompted.";
+    rec.onresult=e=>{const t=e.results[0][0].transcript;$("voiceStatus").textContent="Heard: "+t;respond(t);};
+    rec.onerror=e=>{$("voiceStatus").textContent="Voice error: "+e.error+". You can type commands instead.";};
+    rec.onend=()=>{if($("voiceStatus").textContent==="Listening… allow microphone permission if prompted.")$("voiceStatus").textContent="Voice input finished.";};
+    rec.start();
+  });
+})();
+</script>
 </body>
 </html>
